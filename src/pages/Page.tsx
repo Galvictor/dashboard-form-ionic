@@ -21,9 +21,10 @@ import {
     IonIcon,
     IonToast,
 } from '@ionic/react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { cameraOutline, saveOutline, trashOutline, searchOutline } from 'ionicons/icons';
+import { Capacitor } from '@capacitor/core';
+import { cameraOutline, saveOutline, trashOutline, searchOutline, folderOpenOutline } from 'ionicons/icons';
 import { CepService } from '../services/cepService';
 import './Page.css';
 
@@ -49,6 +50,7 @@ const Page: React.FC = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [buscandoCep, setBuscandoCep] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData((prev) => ({
@@ -119,8 +121,65 @@ const Page: React.FC = () => {
             }
         } catch (error) {
             console.error('Erro ao capturar foto:', error);
-            setToastMessage('Erro ao capturar foto. Tente novamente.');
-            setShowToast(true);
+
+            // Se estivermos na web e der erro, oferecer fallback de arquivo
+            if (Capacitor.getPlatform() === 'web') {
+                setToastMessage('Câmera não disponível na web. Clique no botão de pasta para selecionar uma foto.');
+                setShowToast(true);
+            } else {
+                setToastMessage('Erro ao capturar foto. Tente novamente.');
+                setShowToast(true);
+            }
+        }
+    };
+
+    const handleFileUpload = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (file) {
+            // Verificar se é uma imagem
+            if (!file.type.startsWith('image/')) {
+                setToastMessage('Por favor, selecione apenas arquivos de imagem.');
+                setShowToast(true);
+                return;
+            }
+
+            // Verificar tamanho (máximo 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setToastMessage('Arquivo muito grande. Máximo 5MB.');
+                setShowToast(true);
+                return;
+            }
+
+            // Converter para base64
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target?.result as string;
+                if (result) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        foto: result,
+                    }));
+                    setToastMessage('Foto selecionada com sucesso!');
+                    setShowToast(true);
+                }
+            };
+            reader.onerror = () => {
+                setToastMessage('Erro ao ler arquivo. Tente novamente.');
+                setShowToast(true);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Limpar input para permitir selecionar o mesmo arquivo novamente
+        if (event.target) {
+            event.target.value = '';
         }
     };
 
@@ -213,11 +272,22 @@ const Page: React.FC = () => {
                                         </IonAvatar>
                                         <IonLabel>
                                             <h2>Foto do Perfil</h2>
-                                            <p>{formData.foto ? 'Foto capturada' : 'Clique para capturar'}</p>
+                                            <p>
+                                                {formData.foto
+                                                    ? 'Foto capturada'
+                                                    : Capacitor.getPlatform() === 'web'
+                                                    ? 'Câmera ou pasta para selecionar'
+                                                    : 'Clique para capturar'}
+                                            </p>
                                         </IonLabel>
                                         <IonButton fill="clear" color="tertiary" slot="end" onClick={handlePhotoUpload}>
                                             <IonIcon icon={cameraOutline} />
                                         </IonButton>
+                                        {Capacitor.getPlatform() === 'web' && (
+                                            <IonButton fill="clear" color="secondary" slot="end" onClick={handleFileUpload}>
+                                                <IonIcon icon={folderOpenOutline} />
+                                            </IonButton>
+                                        )}
                                         {formData.foto && (
                                             <IonButton fill="clear" color="danger" slot="end" onClick={handleRemovePhoto}>
                                                 <IonIcon icon={trashOutline} />
@@ -312,6 +382,9 @@ const Page: React.FC = () => {
                 </IonGrid>
 
                 <IonToast isOpen={showToast} onDidDismiss={() => setShowToast(false)} message={toastMessage} duration={3000} />
+
+                {/* Input file oculto para fallback na web */}
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
             </IonContent>
         </IonPage>
     );

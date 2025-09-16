@@ -50,8 +50,9 @@ const image = await Camera.getPhoto({
 
 ### **2. Opções Disponíveis**
 
--   **📷 Câmera**: Captura nova foto
--   **🖼️ Galeria**: Seleciona foto existente
+-   **📷 Câmera**: Captura nova foto (Electron/Mobile)
+-   **📁 Pasta**: Seleciona arquivo do computador (Web)
+-   **🖼️ Galeria**: Seleciona foto existente (Mobile)
 -   **✏️ Edição**: Corta/ajusta antes de confirmar
 -   **🗑️ Remover**: Remove foto capturada
 
@@ -93,9 +94,9 @@ const image = await Camera.getPhoto({
 
 ### **🎛️ Controles por Plataforma:**
 
--   **Desktop**: Seleção de arquivo ou webcam
+-   **Electron (Desktop)**: Câmera nativa funcional
 -   **Mobile**: Câmera nativa ou galeria
--   **Web**: Interface PWA Elements
+-   **Web**: Fallback automático para seleção de arquivo (input file)
 
 ## 🚀 **Próximas Melhorias Possíveis**
 
