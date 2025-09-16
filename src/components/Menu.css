@@ -143,6 +143,9 @@ ion-menu ion-list-header ion-chip {
     margin: 0 !important;
     height: 20px !important;
     font-size: 0.7em !important;
+    border: 2px solid rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    background: #ffffff !important;
 }
 
 ion-menu ion-list-header ion-chip ion-icon {

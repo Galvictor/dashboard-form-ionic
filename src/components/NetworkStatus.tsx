@@ -47,6 +47,9 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({ showWhenOnline = f
             style={{
                 margin: compact ? '4px' : '8px',
                 fontSize: compact ? '0.8em' : '0.9em',
+                border: '2px solid rgba(0,0,0,0.4)',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                background: '#ffffff',
             }}
         >
             <IonIcon icon={getConnectionIcon()} />
