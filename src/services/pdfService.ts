@@ -1,5 +1,7 @@
 // Service para geração de PDF com dados do formulário
 import jsPDF from 'jspdf';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 interface FormData {
     nome: string;
@@ -130,9 +132,45 @@ export class PdfService {
 
             // === SALVAR PDF ===
             const nomeArquivo = `formulario_${formData.nome.replace(/\s+/g, '_').toLowerCase()}_${Date.now()}.pdf`;
-            pdf.save(nomeArquivo);
 
-            console.log('PDF gerado com sucesso:', nomeArquivo);
+            // Verificar plataforma para escolher método de salvamento
+            if (Capacitor.getPlatform() === 'web' || Capacitor.getPlatform() === 'electron') {
+                // Web e Electron: usar método padrão do jsPDF
+                pdf.save(nomeArquivo);
+                console.log('PDF gerado com sucesso (web/electron):', nomeArquivo);
+            } else {
+                // Mobile (Android/iOS): usar Capacitor Filesystem
+                try {
+                    // Converter PDF para base64
+                    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+                    // Salvar no diretório Documents do dispositivo
+                    const result = await Filesystem.writeFile({
+                        path: nomeArquivo,
+                        data: pdfBase64,
+                        directory: Directory.Documents,
+                    });
+
+                    console.log('PDF salvo com sucesso no Android:', result.uri);
+
+                    // Tentar também salvar na pasta Downloads se possível
+                    try {
+                        const downloadResult = await Filesystem.writeFile({
+                            path: nomeArquivo,
+                            data: pdfBase64,
+                            directory: Directory.ExternalStorage,
+                        });
+                        console.log('PDF também salvo em Downloads:', downloadResult.uri);
+                    } catch (downloadError) {
+                        console.error('Erro ao salvar PDF em Downloads:', downloadError);
+                        console.log('Não foi possível salvar em Downloads, mas salvo em Documents');
+                    }
+                } catch (filesystemError) {
+                    console.error('Erro ao salvar PDF no filesystem:', filesystemError);
+                    // Fallback para método padrão
+                    pdf.save(nomeArquivo);
+                }
+            }
         } catch (error) {
             console.error('Erro ao gerar PDF:', error);
             throw new Error('Erro ao gerar PDF. Tente novamente.');

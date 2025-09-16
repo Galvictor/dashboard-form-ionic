@@ -71,7 +71,13 @@ export const useFormulario = () => {
             // Gerar PDF com os dados
             await PdfService.gerarPdf(formData);
 
-            setToastMessage('Formulário enviado e PDF gerado com sucesso!');
+            // Feedback específico por plataforma
+            const platform = await import('@capacitor/core').then((m) => m.Capacitor.getPlatform());
+            if (platform === 'android' || platform === 'ios') {
+                setToastMessage('PDF salvo na pasta Documents do dispositivo!');
+            } else {
+                setToastMessage('Formulário enviado e PDF baixado com sucesso!');
+            }
             setShowToast(true);
 
             // Limpar formulário após envio
