@@ -27,6 +27,7 @@ import { Capacitor } from '@capacitor/core';
 import { cameraOutline, trashOutline, searchOutline, folderOpenOutline, documentOutline } from 'ionicons/icons';
 import { CepService } from '../services/cepService';
 import { PdfService } from '../services/pdfService';
+import { MaskService } from '../services/maskService';
 import './Page.css';
 
 interface FormData {
@@ -54,9 +55,18 @@ const Page: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
+        let maskedValue = value;
+
+        // Aplicar máscaras específicas
+        if (field === 'telefone') {
+            maskedValue = MaskService.aplicarMascaraTelefone(value);
+        } else if (field === 'cep') {
+            maskedValue = MaskService.aplicarMascaraCep(value);
+        }
+
         setFormData((prev) => ({
             ...prev,
-            [field]: value,
+            [field]: maskedValue,
         }));
     };
 
@@ -64,6 +74,20 @@ const Page: React.FC = () => {
         // Validação básica
         if (!formData.nome || !formData.email || !formData.telefone) {
             setToastMessage('Por favor, preencha os campos obrigatórios: Nome, Email e Telefone');
+            setShowToast(true);
+            return;
+        }
+
+        // Validação de formato do telefone
+        if (!MaskService.validarTelefone(formData.telefone)) {
+            setToastMessage('Telefone inválido. Use o formato (11) 99999-9999');
+            setShowToast(true);
+            return;
+        }
+
+        // Validação de formato do CEP (se preenchido)
+        if (formData.cep && !MaskService.validarCep(formData.cep)) {
+            setToastMessage('CEP inválido. Use o formato 00000-000');
             setShowToast(true);
             return;
         }
@@ -338,6 +362,7 @@ const Page: React.FC = () => {
                                             placeholder="(11) 99999-9999"
                                             onIonInput={(e) => handleInputChange('telefone', e.detail.value!)}
                                             clearInput={true}
+                                            maxlength={15}
                                         />
                                     </IonItem>
 
@@ -350,13 +375,14 @@ const Page: React.FC = () => {
                                             onIonInput={(e) => handleInputChange('cep', e.detail.value!)}
                                             clearInput={true}
                                             maxlength={9}
+                                            inputmode="numeric"
                                         />
                                         <IonButton
                                             fill="clear"
                                             color="secondary"
                                             slot="end"
                                             onClick={handleBuscarCep}
-                                            disabled={buscandoCep || !formData.cep}
+                                            disabled={buscandoCep || !MaskService.validarCep(formData.cep)}
                                         >
                                             <IonIcon icon={searchOutline} className={buscandoCep ? 'spin' : ''} />
                                         </IonButton>
