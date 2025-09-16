@@ -36,9 +36,13 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({ showWhenOnline = f
     };
 
     const getChipColor = () => {
-        if (!isOnline) return 'danger';
-        if (connectionType === 'cellular') return 'warning';
-        return 'success';
+        return 'light'; // Sempre branco
+    };
+
+    const getIconColor = () => {
+        if (!isOnline) return '#dc3545'; // Vermelho
+        if (connectionType === 'cellular') return '#FDC82F'; // Amarelo Petrobras para dados móveis
+        return '#008542'; // Verde Petrobras para WiFi
     };
 
     return (
@@ -52,8 +56,8 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({ showWhenOnline = f
                 background: '#ffffff',
             }}
         >
-            <IonIcon icon={getConnectionIcon()} />
-            {!compact && <IonLabel>{getConnectionText()}</IonLabel>}
+            <IonIcon icon={getConnectionIcon()} style={{ color: getIconColor() }} />
+            {!compact && <IonLabel style={{ color: getIconColor() }}>{getConnectionText()}</IonLabel>}
         </IonChip>
     );
 };
