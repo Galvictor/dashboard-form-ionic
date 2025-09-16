@@ -2,6 +2,7 @@ import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu
 
 import { useLocation } from 'react-router-dom';
 import { documentTextOutline, documentText } from 'ionicons/icons';
+import { NetworkStatus } from './NetworkStatus';
 import './Menu.css';
 
 interface AppPage {
@@ -27,7 +28,12 @@ const Menu: React.FC = () => {
         <IonMenu contentId="main" type="overlay">
             <IonContent>
                 <IonList id="dashboard-list">
-                    <IonListHeader>Dashboard</IonListHeader>
+                    <IonListHeader>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                            <span>Dashboard</span>
+                            <NetworkStatus compact={true} alwaysShow={true} />
+                        </div>
+                    </IonListHeader>
                     {appPages.map((appPage, index) => {
                         return (
                             <IonMenuToggle key={index} autoHide={false}>

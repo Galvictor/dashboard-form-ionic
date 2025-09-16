@@ -32,6 +32,7 @@ ion-menu.md ion-list#dashboard-list ion-list-header {
     font-weight: 600;
     min-height: 20px;
     color: #000000 !important;
+    padding: 16px;
 }
 
 ion-menu.md ion-item {
@@ -127,4 +128,23 @@ ion-menu ion-label {
 /* iOS específico */
 ion-menu.ios ion-item ion-label {
     color: #000000 !important;
+}
+
+/* === HEADER DASHBOARD COM INDICADOR DE REDE === */
+ion-menu ion-list-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+/* Garantir que o indicador de rede não quebre o layout */
+ion-menu ion-list-header ion-chip {
+    margin: 0 !important;
+    height: 20px !important;
+    font-size: 0.7em !important;
+}
+
+ion-menu ion-list-header ion-chip ion-icon {
+    font-size: 0.9em !important;
 }

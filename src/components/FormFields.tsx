@@ -1,6 +1,7 @@
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon } from '@ionic/react';
 import { searchOutline } from 'ionicons/icons';
 import { MaskService } from '../services/maskService';
+import { useNetwork } from '../hooks/useNetwork';
 import { FormData } from '../hooks/useFormulario';
 
 interface FormFieldsProps {
@@ -10,12 +11,8 @@ interface FormFieldsProps {
     onBuscarCep: () => void;
 }
 
-export const FormFields: React.FC<FormFieldsProps> = ({ 
-    formData, 
-    buscandoCep, 
-    onInputChange, 
-    onBuscarCep 
-}) => {
+export const FormFields: React.FC<FormFieldsProps> = ({ formData, buscandoCep, onInputChange, onBuscarCep }) => {
+    const { isOnline } = useNetwork();
     return (
         <>
             {/* Nome */}
@@ -67,10 +64,11 @@ export const FormFields: React.FC<FormFieldsProps> = ({
                 />
                 <IonButton
                     fill="clear"
-                    color="secondary"
+                    color={isOnline ? 'secondary' : 'medium'}
                     slot="end"
                     onClick={onBuscarCep}
-                    disabled={buscandoCep || !MaskService.validarCep(formData.cep)}
+                    disabled={buscandoCep || !MaskService.validarCep(formData.cep) || !isOnline}
+                    title={!isOnline ? 'Sem conexão com a internet' : 'Buscar endereço pelo CEP'}
                 >
                     <IonIcon icon={searchOutline} className={buscandoCep ? 'spin' : ''} />
                 </IonButton>
@@ -80,9 +78,7 @@ export const FormFields: React.FC<FormFieldsProps> = ({
             <IonItem>
                 <IonLabel position="stacked">
                     Endereço
-                    {buscandoCep && (
-                        <span style={{ color: 'var(--ion-color-secondary)', fontSize: '0.8em' }}> (buscando...)</span>
-                    )}
+                    {buscandoCep && <span style={{ color: 'var(--ion-color-secondary)', fontSize: '0.8em' }}> (buscando...)</span>}
                 </IonLabel>
                 <IonInput
                     value={formData.endereco}

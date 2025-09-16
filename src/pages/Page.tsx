@@ -21,6 +21,7 @@ import { documentOutline } from 'ionicons/icons';
 import { useFormulario } from '../hooks/useFormulario';
 import { PhotoUpload } from '../components/PhotoUpload';
 import { FormFields } from '../components/FormFields';
+import { NetworkStatus } from '../components/NetworkStatus';
 import './Page.css';
 
 const Page: React.FC = () => {
@@ -45,6 +46,9 @@ const Page: React.FC = () => {
                         <IonMenuButton />
                     </IonButtons>
                     <IonTitle>Form 1</IonTitle>
+                    <IonButtons slot="end">
+                        <NetworkStatus compact={true} alwaysShow={true} />
+                    </IonButtons>
                 </IonToolbar>
             </IonHeader>
 

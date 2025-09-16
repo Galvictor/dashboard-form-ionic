@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CepService } from '../services/cepService';
 import { PdfService } from '../services/pdfService';
 import { MaskService } from '../services/maskService';
+import { useNetwork } from './useNetwork';
 
 export interface FormData {
     nome: string;
@@ -13,6 +14,8 @@ export interface FormData {
 }
 
 export const useFormulario = () => {
+    const { isOnline } = useNetwork();
+
     const [formData, setFormData] = useState<FormData>({
         nome: '',
         email: '',
@@ -99,6 +102,12 @@ export const useFormulario = () => {
     const handleBuscarCep = async () => {
         if (!formData.cep) {
             setToastMessage('Por favor, digite um CEP primeiro');
+            setShowToast(true);
+            return;
+        }
+
+        if (!isOnline) {
+            setToastMessage('Sem conexão com a internet. Verifique sua conexão e tente novamente.');
             setShowToast(true);
             return;
         }
