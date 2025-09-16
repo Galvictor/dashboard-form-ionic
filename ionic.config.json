@@ -1,0 +1,7 @@
+{
+  "name": "dashboard-test-ionc",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
