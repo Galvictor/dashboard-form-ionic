@@ -15,8 +15,11 @@ if (fs.existsSync(htmlPath)) {
     // Corrigir base href
     htmlContent = htmlContent.replace('<base href="/" />', '<base href="./" />');
 
+    // Forçar modo claro (remover modo escuro)
+    htmlContent = htmlContent.replace('<meta name="color-scheme" content="light dark" />', '<meta name="color-scheme" content="light only" />');
+
     fs.writeFileSync(htmlPath, htmlContent);
-    console.log('✅ Build corrigido para Electron!');
+    console.log('✅ Build corrigido para Electron (modo claro forçado)!');
 } else {
     console.log('❌ Arquivo dist/index.html não encontrado. Execute "npm run build" primeiro.');
 }

@@ -1,5 +1,6 @@
 ion-menu ion-content {
-    --background: var(--ion-item-background, var(--ion-background-color, #fff));
+    --background: #ffffff !important;
+    --color: #000000 !important;
 }
 
 ion-menu.md ion-content {
@@ -30,6 +31,7 @@ ion-menu.md ion-list#dashboard-list ion-list-header {
     font-size: 22px;
     font-weight: 600;
     min-height: 20px;
+    color: #000000 !important;
 }
 
 ion-menu.md ion-item {
@@ -52,6 +54,7 @@ ion-menu.md ion-item ion-icon {
 
 ion-menu.md ion-item ion-label {
     font-weight: 500;
+    color: #000000 !important;
 }
 
 ion-menu.ios ion-content {
@@ -100,4 +103,28 @@ ion-note {
 
 ion-item.selected {
     --color: var(--ion-color-primary);
+}
+
+/* === FORÇAR CORES DO MENU === */
+ion-menu {
+    --ion-background-color: #ffffff !important;
+    --ion-text-color: #000000 !important;
+}
+
+ion-menu ion-item {
+    --background: #ffffff !important;
+    --color: #000000 !important;
+}
+
+ion-menu ion-list-header {
+    color: #000000 !important;
+}
+
+ion-menu ion-label {
+    color: #000000 !important;
+}
+
+/* iOS específico */
+ion-menu.ios ion-item ion-label {
+    color: #000000 !important;
 }

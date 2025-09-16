@@ -1,2 +1,206 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+/* CORES PETROBRAS - Paleta Oficial 
+ * 
+ * CORES IMPLEMENTADAS:
+ * - Verde Petrobras: #008542 (Primary - Toolbar, botões principais)
+ * - Amarelo Petrobras: #FDC82F (Secondary)
+ * - Verde Água: #00B2A9 (Tertiary - botão câmera)
+ * - Verde Claro: #C4D600 (Success)
+ * - Amarelo Claro: #EBFFDD (Light)
+ * - Laranja: #ED8B00 (Warning/Danger)
+ * - Azul Escuro: #006298 (Dark)
+ * - Azul Claro: #3DDAFF (Custom)
+ * - Cinza: #75787B (Medium)
+ * - Branco: #FFFFFF (Background)
+ * - Preto: #000000 (Text)
+ */
+
+:root {
+    /* === CORES PRIMÁRIAS PETROBRAS === */
+
+    /* Verde Petrobras - Cor Principal */
+    --ion-color-primary: #008542;
+    --ion-color-primary-rgb: 0, 133, 66;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #00753a;
+    --ion-color-primary-tint: #1a9155;
+
+    /* Amarelo Petrobras - Cor Secundária */
+    --ion-color-secondary: #fdc82f;
+    --ion-color-secondary-rgb: 253, 200, 47;
+    --ion-color-secondary-contrast: #000000;
+    --ion-color-secondary-contrast-rgb: 0, 0, 0;
+    --ion-color-secondary-shade: #dfb029;
+    --ion-color-secondary-tint: #fdd044;
+
+    /* Verde Água - Cor Terciária */
+    --ion-color-tertiary: #00b2a9;
+    --ion-color-tertiary-rgb: 0, 178, 169;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #009d95;
+    --ion-color-tertiary-tint: #1abab2;
+
+    /* Success - Verde Claro */
+    --ion-color-success: #c4d600;
+    --ion-color-success-rgb: 196, 214, 0;
+    --ion-color-success-contrast: #000000;
+    --ion-color-success-contrast-rgb: 0, 0, 0;
+    --ion-color-success-shade: #acbc00;
+    --ion-color-success-tint: #cada1a;
+
+    /* Warning - Laranja */
+    --ion-color-warning: #ed8b00;
+    --ion-color-warning-rgb: 237, 139, 0;
+    --ion-color-warning-contrast: #ffffff;
+    --ion-color-warning-contrast-rgb: 255, 255, 255;
+    --ion-color-warning-shade: #d17a00;
+    --ion-color-warning-tint: #ef971a;
+
+    /* Danger - Laranja (mesmo tom para consistência) */
+    --ion-color-danger: #ed8b00;
+    --ion-color-danger-rgb: 237, 139, 0;
+    --ion-color-danger-contrast: #ffffff;
+    --ion-color-danger-contrast-rgb: 255, 255, 255;
+    --ion-color-danger-shade: #d17a00;
+    --ion-color-danger-tint: #ef971a;
+
+    /* Dark - Azul Escuro */
+    --ion-color-dark: #006298;
+    --ion-color-dark-rgb: 0, 98, 152;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-contrast-rgb: 255, 255, 255;
+    --ion-color-dark-shade: #005686;
+    --ion-color-dark-tint: #1a71a2;
+
+    /* Medium - Cinza */
+    --ion-color-medium: #75787b;
+    --ion-color-medium-rgb: 117, 120, 123;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+    --ion-color-medium-shade: #676a6c;
+    --ion-color-medium-tint: #838588;
+
+    /* Light - Amarelo Claro */
+    --ion-color-light: #ebffdd;
+    --ion-color-light-rgb: 235, 255, 221;
+    --ion-color-light-contrast: #000000;
+    --ion-color-light-contrast-rgb: 0, 0, 0;
+    --ion-color-light-shade: #cfe0c2;
+    --ion-color-light-tint: #edffe0;
+
+    /* === CORES CUSTOMIZADAS PETROBRAS === */
+
+    /* Azul Claro */
+    --petrobras-azul-claro: #3ddaff;
+    --petrobras-azul-claro-rgb: 61, 218, 255;
+    --petrobras-azul-claro-contrast: #000000;
+
+    /* Verde Petrobras Original */
+    --petrobras-verde: #008542;
+    --petrobras-verde-rgb: 0, 133, 66;
+
+    /* Amarelo Petrobras Original */
+    --petrobras-amarelo: #fdc82f;
+    --petrobras-amarelo-rgb: 253, 200, 47;
+
+    /* === BACKGROUNDS E SUPERFÍCIES === */
+    --ion-background-color: #ffffff;
+    --ion-background-color-rgb: 255, 255, 255;
+
+    --ion-text-color: #000000;
+    --ion-text-color-rgb: 0, 0, 0;
+
+    --ion-card-background: #ffffff;
+    --ion-toolbar-background: var(--ion-color-primary);
+    --ion-toolbar-color: #ffffff;
+
+    --ion-item-background: #ffffff;
+    --ion-item-color: #000000;
+}
+
+/* === CLASSES UTILITÁRIAS PETROBRAS === */
+
+.petrobras-verde {
+    --ion-color-base: #008542 !important;
+    --ion-color-base-rgb: 0, 133, 66 !important;
+    --ion-color-contrast: #ffffff !important;
+}
+
+.petrobras-amarelo {
+    --ion-color-base: #fdc82f !important;
+    --ion-color-base-rgb: 253, 200, 47 !important;
+    --ion-color-contrast: #000000 !important;
+}
+
+.petrobras-verde-agua {
+    --ion-color-base: #00b2a9 !important;
+    --ion-color-base-rgb: 0, 178, 169 !important;
+    --ion-color-contrast: #ffffff !important;
+}
+
+.petrobras-azul-claro {
+    --ion-color-base: #3ddaff !important;
+    --ion-color-base-rgb: 61, 218, 255 !important;
+    --ion-color-contrast: #000000 !important;
+}
+
+.petrobras-azul-escuro {
+    --ion-color-base: #006298 !important;
+    --ion-color-base-rgb: 0, 98, 152 !important;
+    --ion-color-contrast: #ffffff !important;
+}
+
+/* === MODO CLARO FIXO (SEM MODO ESCURO) === */
+
+/* Garantir que sempre use modo claro com fundo branco */
+html {
+    color-scheme: light only !important;
+}
+
+body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Sobrescrever qualquer preferência de modo escuro */
+* {
+    color-scheme: light !important;
+}
+
+/* Desabilitar completamente modo escuro em todos os elementos */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: light !important;
+
+        /* Forçar cores claras mesmo com preferência escura do sistema */
+        --ion-background-color: #ffffff !important;
+        --ion-background-color-rgb: 255, 255, 255 !important;
+
+        --ion-text-color: #000000 !important;
+        --ion-text-color-rgb: 0, 0, 0 !important;
+
+        --ion-card-background: #ffffff !important;
+        --ion-item-background: #ffffff !important;
+        --ion-item-color: #000000 !important;
+
+        /* Menu sempre branco */
+        --ion-menu-background: #ffffff !important;
+        --ion-menu-text-color: #000000 !important;
+
+        /* Toolbar Verde Petrobras */
+        --ion-toolbar-background: var(--ion-color-primary) !important;
+        --ion-toolbar-color: #ffffff !important;
+    }
+
+    html,
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        color-scheme: light !important;
+    }
+
+    * {
+        color-scheme: light !important;
+    }
+}

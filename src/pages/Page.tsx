@@ -123,7 +123,7 @@ const Page: React.FC = () => {
                                             <h2>Foto do Perfil</h2>
                                             <p>Clique para alterar</p>
                                         </IonLabel>
-                                        <IonButton fill="clear" slot="end" onClick={handlePhotoUpload}>
+                                        <IonButton fill="clear" color="tertiary" slot="end" onClick={handlePhotoUpload}>
                                             <IonIcon icon={cameraOutline} />
                                         </IonButton>
                                     </IonItem>
@@ -186,7 +186,7 @@ const Page: React.FC = () => {
                                     </IonItem>
 
                                     {/* Botão de envio */}
-                                    <IonButton expand="block" onClick={handleSubmit} style={{ marginTop: '20px' }}>
+                                    <IonButton expand="block" color="primary" onClick={handleSubmit} style={{ marginTop: '20px' }}>
                                         <IonIcon icon={saveOutline} slot="start" />
                                         Salvar Dados
                                     </IonButton>
