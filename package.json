@@ -14,9 +14,13 @@
         "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && NODE_ENV=development electron electron/main.js\"",
         "electron:pack": "npm run build && node scripts/fix-electron-build.js && electron-builder",
         "electron:dist": "npm run build && node scripts/fix-electron-build.js && electron-builder --publish=never",
-        "electron:build": "npm run build && node scripts/fix-electron-build.js"
+        "electron:build": "npm run build && node scripts/fix-electron-build.js",
+        "android:sync": "npx cap sync android",
+        "android:run": "npx cap run android",
+        "android:build": "npm run build && npx cap sync android && npx cap run android"
     },
     "dependencies": {
+        "@capacitor/android": "^7.4.3",
         "@capacitor/app": "7.1.0",
         "@capacitor/camera": "^7.0.2",
         "@capacitor/core": "7.4.3",
