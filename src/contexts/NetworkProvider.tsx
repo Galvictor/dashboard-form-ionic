@@ -36,8 +36,10 @@ export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) =>
                 } else {
                     // Para web/electron, usar API nativa do browser
                     const updateOnlineStatus = () => {
-                        setIsOnline(navigator.onLine);
-                        setConnectionType(navigator.onLine ? 'wifi' : 'none');
+                        const online = navigator.onLine;
+                        console.log('Network status changed (browser):', online);
+                        setIsOnline(online);
+                        setConnectionType(online ? 'wifi' : 'none');
                     };
 
                     // Status inicial
@@ -47,10 +49,14 @@ export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) =>
                     window.addEventListener('online', updateOnlineStatus);
                     window.addEventListener('offline', updateOnlineStatus);
 
+                    // Verificar status a cada 3 segundos como backup
+                    const interval = setInterval(updateOnlineStatus, 3000);
+
                     // Cleanup function
                     return () => {
                         window.removeEventListener('online', updateOnlineStatus);
                         window.removeEventListener('offline', updateOnlineStatus);
+                        clearInterval(interval);
                     };
                 }
             } catch (error) {

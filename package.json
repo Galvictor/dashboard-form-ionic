@@ -88,7 +88,6 @@
             "node_modules/**/*"
         ],
         "win": {
-            "icon": "public/favicon.png",
             "target": [
                 {
                     "target": "nsis",
