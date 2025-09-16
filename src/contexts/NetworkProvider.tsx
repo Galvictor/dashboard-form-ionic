@@ -34,23 +34,43 @@ export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) =>
                         networkListener.remove();
                     };
                 } else {
-                    // Para web/electron, usar API nativa do browser
-                    const updateOnlineStatus = () => {
-                        const online = navigator.onLine;
-                        console.log('Network status changed (browser):', online);
-                        setIsOnline(online);
-                        setConnectionType(online ? 'wifi' : 'none');
+                    // Para web/electron, testar conectividade real
+                    const checkRealConnectivity = async () => {
+                        try {
+                            // Tentar fazer uma requisição rápida para testar conectividade real
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+                            await fetch('https://www.google.com/favicon.ico', {
+                                method: 'HEAD',
+                                mode: 'no-cors',
+                                signal: controller.signal,
+                            });
+
+                            clearTimeout(timeoutId);
+                            return true;
+                        } catch (error) {
+                            console.log('Connectivity test failed:', error instanceof Error ? error.message : 'Unknown error');
+                            return false;
+                        }
+                    };
+
+                    const updateOnlineStatus = async () => {
+                        const isReallyOnline = await checkRealConnectivity();
+                        console.log('Network status (real connectivity):', isReallyOnline);
+                        setIsOnline(isReallyOnline);
+                        setConnectionType(isReallyOnline ? 'wifi' : 'none');
                     };
 
                     // Status inicial
                     updateOnlineStatus();
 
-                    // Listeners para mudanças
+                    // Listeners para mudanças (como backup)
                     window.addEventListener('online', updateOnlineStatus);
                     window.addEventListener('offline', updateOnlineStatus);
 
-                    // Verificar status a cada 3 segundos como backup
-                    const interval = setInterval(updateOnlineStatus, 3000);
+                    // Verificar conectividade real a cada 5 segundos
+                    const interval = setInterval(updateOnlineStatus, 5000);
 
                     // Cleanup function
                     return () => {
