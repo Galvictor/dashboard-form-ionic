@@ -1,0 +1,19 @@
+/* Animação para o ícone de busca do CEP */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estilo para campos readonly */
+ion-input[readonly] {
+    opacity: 0.6;
+    pointer-events: none;
+}

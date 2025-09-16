@@ -23,7 +23,8 @@ import {
 } from '@ionic/react';
 import { useState } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { cameraOutline, saveOutline, trashOutline } from 'ionicons/icons';
+import { cameraOutline, saveOutline, trashOutline, searchOutline } from 'ionicons/icons';
+import { CepService } from '../services/cepService';
 import './Page.css';
 
 interface FormData {
@@ -47,6 +48,7 @@ const Page: React.FC = () => {
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [buscandoCep, setBuscandoCep] = useState(false);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData((prev) => ({
@@ -129,6 +131,45 @@ const Page: React.FC = () => {
         }));
         setToastMessage('Foto removida');
         setShowToast(true);
+    };
+
+    const handleBuscarCep = async () => {
+        if (!formData.cep) {
+            setToastMessage('Por favor, digite um CEP primeiro');
+            setShowToast(true);
+            return;
+        }
+
+        setBuscandoCep(true);
+
+        try {
+            const enderecoCompleto = await CepService.buscarEnderecoCompleto(formData.cep);
+
+            if (enderecoCompleto) {
+                // Montar endereço completo
+                const enderecoFormatado = [enderecoCompleto.endereco, enderecoCompleto.bairro, enderecoCompleto.cidade, enderecoCompleto.uf]
+                    .filter(Boolean)
+                    .join(', ');
+
+                setFormData((prev) => ({
+                    ...prev,
+                    cep: CepService.formatarCep(formData.cep),
+                    endereco: enderecoFormatado,
+                }));
+
+                setToastMessage(`Endereço encontrado: ${enderecoCompleto.cidade}/${enderecoCompleto.uf}`);
+                setShowToast(true);
+            } else {
+                setToastMessage('CEP não encontrado. Verifique se está correto.');
+                setShowToast(true);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar CEP:', error);
+            setToastMessage('Erro ao buscar CEP. Tente novamente.');
+            setShowToast(true);
+        } finally {
+            setBuscandoCep(false);
+        }
     };
 
     return (
@@ -227,17 +268,33 @@ const Page: React.FC = () => {
                                             placeholder="00000-000"
                                             onIonInput={(e) => handleInputChange('cep', e.detail.value!)}
                                             clearInput={true}
+                                            maxlength={9}
                                         />
+                                        <IonButton
+                                            fill="clear"
+                                            color="secondary"
+                                            slot="end"
+                                            onClick={handleBuscarCep}
+                                            disabled={buscandoCep || !formData.cep}
+                                        >
+                                            <IonIcon icon={searchOutline} className={buscandoCep ? 'spin' : ''} />
+                                        </IonButton>
                                     </IonItem>
 
                                     {/* Endereço */}
                                     <IonItem>
-                                        <IonLabel position="stacked">Endereço</IonLabel>
+                                        <IonLabel position="stacked">
+                                            Endereço
+                                            {buscandoCep && (
+                                                <span style={{ color: 'var(--ion-color-secondary)', fontSize: '0.8em' }}> (buscando...)</span>
+                                            )}
+                                        </IonLabel>
                                         <IonInput
                                             value={formData.endereco}
-                                            placeholder="Rua, número, bairro, cidade"
+                                            placeholder="Rua, número, bairro, cidade - ou busque pelo CEP acima"
                                             onIonInput={(e) => handleInputChange('endereco', e.detail.value!)}
                                             clearInput={true}
+                                            readonly={buscandoCep}
                                         />
                                     </IonItem>
 
