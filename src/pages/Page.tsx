@@ -24,8 +24,9 @@ import {
 import { useState, useRef } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
-import { cameraOutline, saveOutline, trashOutline, searchOutline, folderOpenOutline } from 'ionicons/icons';
+import { cameraOutline, trashOutline, searchOutline, folderOpenOutline, documentOutline } from 'ionicons/icons';
 import { CepService } from '../services/cepService';
+import { PdfService } from '../services/pdfService';
 import './Page.css';
 
 interface FormData {
@@ -59,7 +60,7 @@ const Page: React.FC = () => {
         }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Validação básica
         if (!formData.nome || !formData.email || !formData.telefone) {
             setToastMessage('Por favor, preencha os campos obrigatórios: Nome, Email e Telefone');
@@ -67,20 +68,30 @@ const Page: React.FC = () => {
             return;
         }
 
-        // Aqui você pode processar os dados do formulário
-        console.log('Dados do formulário:', formData);
-        setToastMessage('Formulário enviado com sucesso!');
-        setShowToast(true);
+        try {
+            // Processar dados do formulário
+            console.log('Dados do formulário:', formData);
 
-        // Limpar formulário após envio
-        setFormData({
-            nome: '',
-            email: '',
-            foto: '',
-            cep: '',
-            endereco: '',
-            telefone: '',
-        });
+            // Gerar PDF com os dados
+            await PdfService.gerarPdf(formData);
+
+            setToastMessage('Formulário enviado e PDF gerado com sucesso!');
+            setShowToast(true);
+
+            // Limpar formulário após envio
+            setFormData({
+                nome: '',
+                email: '',
+                foto: '',
+                cep: '',
+                endereco: '',
+                telefone: '',
+            });
+        } catch (error) {
+            console.error('Erro ao processar formulário:', error);
+            setToastMessage('Erro ao gerar PDF. Dados salvos localmente.');
+            setShowToast(true);
+        }
     };
 
     const handlePhotoUpload = async () => {
@@ -370,8 +381,8 @@ const Page: React.FC = () => {
 
                                     {/* Botão de envio */}
                                     <IonButton expand="block" color="primary" onClick={handleSubmit} style={{ marginTop: '20px' }}>
-                                        <IonIcon icon={saveOutline} slot="start" />
-                                        Salvar Dados
+                                        <IonIcon icon={documentOutline} slot="start" />
+                                        Salvar e Gerar PDF
                                     </IonButton>
 
                                     <p style={{ fontSize: '0.8em', color: '#666', marginTop: '10px' }}>* Campos obrigatórios</p>
