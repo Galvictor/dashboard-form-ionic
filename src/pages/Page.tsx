@@ -22,7 +22,8 @@ import {
     IonToast,
 } from '@ionic/react';
 import { useState } from 'react';
-import { cameraOutline, saveOutline } from 'ionicons/icons';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { cameraOutline, saveOutline, trashOutline } from 'ionicons/icons';
 import './Page.css';
 
 interface FormData {
@@ -78,9 +79,55 @@ const Page: React.FC = () => {
         });
     };
 
-    const handlePhotoUpload = () => {
-        // Implementar upload de foto futuramente
-        setToastMessage('Funcionalidade de upload de foto será implementada em breve');
+    const handlePhotoUpload = async () => {
+        try {
+            // Verificar se o dispositivo suporta câmera
+            const permissions = await Camera.checkPermissions();
+
+            if (permissions.camera !== 'granted') {
+                const requestResult = await Camera.requestPermissions();
+                if (requestResult.camera !== 'granted') {
+                    setToastMessage('Permissão da câmera negada. Verifique as configurações.');
+                    setShowToast(true);
+                    return;
+                }
+            }
+
+            // Configurar opções da câmera
+            const image = await Camera.getPhoto({
+                quality: 90,
+                allowEditing: true,
+                resultType: CameraResultType.DataUrl,
+                source: CameraSource.Prompt, // Permite escolher entre câmera ou galeria
+                width: 300,
+                height: 300,
+            });
+
+            // Atualizar o estado com a foto capturada
+            if (image.dataUrl) {
+                setFormData((prev) => ({
+                    ...prev,
+                    foto: image.dataUrl || '',
+                }));
+                setToastMessage('Foto capturada com sucesso!');
+                setShowToast(true);
+            } else {
+                setToastMessage('Erro: Foto não foi capturada corretamente.');
+                setShowToast(true);
+            }
+        } catch (error) {
+            console.error('Erro ao capturar foto:', error);
+            setToastMessage('Erro ao capturar foto. Tente novamente.');
+            setShowToast(true);
+        }
+    };
+
+    const handleRemovePhoto = () => {
+        setFormData((prev) => ({
+            ...prev,
+            foto: '',
+        }));
+        setToastMessage('Foto removida');
         setShowToast(true);
     };
 
@@ -117,15 +164,24 @@ const Page: React.FC = () => {
                                             <img
                                                 alt="Foto do usuário"
                                                 src={formData.foto || 'https://ionicframework.com/docs/img/demos/avatar.svg'}
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    border: formData.foto ? '2px solid var(--ion-color-primary)' : 'none',
+                                                }}
                                             />
                                         </IonAvatar>
                                         <IonLabel>
                                             <h2>Foto do Perfil</h2>
-                                            <p>Clique para alterar</p>
+                                            <p>{formData.foto ? 'Foto capturada' : 'Clique para capturar'}</p>
                                         </IonLabel>
                                         <IonButton fill="clear" color="tertiary" slot="end" onClick={handlePhotoUpload}>
                                             <IonIcon icon={cameraOutline} />
                                         </IonButton>
+                                        {formData.foto && (
+                                            <IonButton fill="clear" color="danger" slot="end" onClick={handleRemovePhoto}>
+                                                <IonIcon icon={trashOutline} />
+                                            </IonButton>
+                                        )}
                                     </IonItem>
 
                                     {/* Nome */}
